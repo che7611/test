@@ -201,7 +201,7 @@ class Ui_MainWindow(object):
         self.box_price.setProperty("value", 29500)
         self.box_price.setObjectName("box_price")
         self.label_8 = QtWidgets.QLabel(self.centralwidget)
-        self.label_8.setGeometry(QtCore.QRect(320, 40, 81, 19))
+        self.label_8.setGeometry(QtCore.QRect(320, 40, 61, 20))
         font = QtGui.QFont()
         font.setFamily("新宋体")
         font.setPointSize(12)

@@ -264,9 +264,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def c_login(self):
         user = self.l_user.text()
         pwd = self.l_pwd.text()
-        login = web_trade.login(user, pwd)
-        if not web_trade.status:
-            w.statusBar().showMessage(web_trade.error)
+        login = web_trade.login_1(user, pwd)
+        pos=login.find(web_trade.url['sms'])
+        if pos==-1:
+            return
+        sms, ok = QInputDialog.getText(self, '短信验证', '请填写短信验证码：')
+        if ok:
+            res=web_trade.login_2(login,sms)
+            if res==0:
+                w.statusBar().showMessage("登陆不成功!")
+                return
+        else:
             return
         w.statusBar().showMessage("登陆成功!")
         web_trade.error=1

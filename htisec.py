@@ -26,6 +26,9 @@ class htisec_web(object):
         'cancelAllOrder':"https://futures.htisec.com/wf/cancelAllOrder.do",
         'session':"https://futures.htisec.com/wf/jsp/session.jsp",
         "Eorderdetail":"https://futures.htisec.com/wf/enquiryOrderDetail.do?acc_order_no=%d&has_TS_falg=Y",
+        "sms":"https://futures.htisec.com/wf/jsp/check_sms.jsp",
+        "login_2":"https://futures.htisec.com/wf/login2fa.do",
+        "risk":"https://futures.htisec.com/wf/jsp/risk_disclosure.jsp",
         }
         #返回错误码的正则表达式 
         self.reg={
@@ -84,7 +87,7 @@ class htisec_web(object):
             self.error=reg.group(1).decode('utf-8')
             return 1
         else:
-            return 0
+            return 0   
 
     # auto login
     def login_a(self):
@@ -98,7 +101,7 @@ class htisec_web(object):
         try:
             get1=self._s.get(self.url['login_jsp'] ,verify=False)
             #print('Login Request Status:',get1.status_code)
-            jid1=get1.cookies.values()[0]
+            jid1=get1.cookies['JSESSIONID']
             self._headers['Cookie']="JSESSIONID="+jid1
             login_data = {'login_id': user, 'pwd': pwd}
             post1 = self._s.post(self.url['login_do'] , data=login_data,verify=False,timeout=5)
@@ -116,6 +119,34 @@ class htisec_web(object):
         except Exception as e:
             self.status=0
             print("Login Try_Error:",e)
+
+    def login_1(self,user,pwd):
+        '''登陆第一步'''
+        self.account={'user':user,'pwd':pwd}
+        self._s.cookies.clear()
+        #login jsp
+        get1 = self._s.get(self.url['login_jsp'], verify=False)
+        # print('Login Request Status:',get1.status_code)
+        jid1 = get1.cookies['JSESSIONID']
+        self._headers['Cookie'] = "JSESSIONID=" + jid1
+        login_data = {'login_id': user, 'pwd': pwd}
+        post1 = self._s.post(self.url['login_do'], data=login_data, verify=False, timeout=5)
+        self.login1_post=post1.text
+        return post1.text
+
+    def login_2(self,text,otp):
+        '''手机验证'''
+        self.status=1
+        forms=self.get_forms(text)
+        forms['otp']=otp
+        post2 = self._s.post(self.url['login_2'], data=forms, verify=False, timeout=5)
+        self.login2_post=post2.text
+        self.login_time = time.time()
+        pos=post2.text.find(self.url['risk'])
+        if pos>-1 :
+            return 1
+        else:
+            return 0
         
     def get_url(self,url):
         '''get url html'''
