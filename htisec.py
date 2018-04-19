@@ -130,7 +130,8 @@ class htisec_web(object):
         jid1 = get1.cookies['JSESSIONID']
         self._headers['Cookie'] = "JSESSIONID=" + jid1
         login_data = {'login_id': user, 'pwd': pwd}
-        post1 = self._s.post(self.url['login_do'], data=login_data, verify=False, timeout=5)
+        post1 = self._s.post(self.url['login_do'], data=login_data, verify=False, timeout=20)
+        print(post1.status_code)
         self.login1_post=post1.text
         return post1.text
 
@@ -156,7 +157,7 @@ class htisec_web(object):
             get2=self._s.get(url ,verify=False,timeout=10)
             print("Get_url %s %s,Re:%s" %(get2.url,get2.status_code,get2.history))
             if  self.verify_out(get2):
-                return self.get_url(url)
+                return "ERROR"
             else:
                 return get2.text
         except Exception as e:
@@ -172,8 +173,8 @@ class htisec_web(object):
     def verify_out(self,req):
         '''验证是否已自动退出 '''
         if (req.url == self.url["session"]):
-            print("Session Timout...")
-            self.login_a()
+            print("Session Timout...Please login again")
+            #self.login_a()
             return True
         else:
             return False
