@@ -125,14 +125,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             w.statusBar().showMessage('没有登陆!')
             return True
         else:
-            timediff=time.time()-web_trade.login_time
-            print("time diff:",timediff)
-            if  timediff>600:
-                web_trade.login_a()
-            return False
+            if web_trade.verify_out1():
+                w.statusBar().showMessage('Session Timeout!')
+                return True
+            else:
+                return False
     #Test button
     def c_test(self):
-        pass
+        print(web_trade.verify_out1())
 
     #load info
     def load_info(self):

@@ -179,6 +179,16 @@ class htisec_web(object):
         else:
             return False
 
+    def verify_out1(self):
+        '''验证是否已自动退出 '''
+        url=self.url['orderlist']
+        get2 = self._s.get(url, verify=False, timeout=10)
+        if (get2.url == self.url["session"]):
+            print("Session Timout...Please login again")
+            return True
+        else:
+            return False
+
     def get_orderlist(self):
         try:
             if self.status==0:
