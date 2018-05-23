@@ -1,4 +1,5 @@
 from htisec import htisec_web as ht
+from jy import HS
 from win_ui import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow
@@ -32,6 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.b_stopsell.clicked.connect(self.c_stopsell)
         self.b_orderlist.clicked.connect(self.c_orderlist)
         self.b_test.clicked.connect(self.c_test)
+        self.b_test1.clicked.connect(self.c_test1)
         self.b_delStop.clicked.connect(self.c_delStop)
         self.b_delAll.clicked.connect(self.c_delAll)
         self.b_delStopB.clicked.connect(self.c_delStopB)
@@ -134,6 +136,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def c_test(self):
         print(web_trade.verify_out1())
 
+    #test1 button
+    def c_test1(self):
+        if self.check_login():return
+        #get orderlist
+        hh = web_trade.get_orderlist()
+        if web_trade.status==999:
+            print("get_orderlist没有返回数据[c_orderlist]")
+            return -1
+        tradelist=web_trade.get_tradelist(hh)
+
+        list1 = tradelist
+        list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
+        list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
+        df1 = list1[['buy', 'sell', 'trade_price', 'trade_time']]
+        df2 = df1.fillna(0)
+        df2.columns = ['buy', 'sell', 'price', 'time']
+        h = HS()
+        df2 = h.ray(df2)
+
+        cols = ['refno', 'product', 'trade_price', 'trade_qty', 'trade_time', 'price', 'filled_qty', 'r_qty',
+                'initiator', 'order_time', 'status']
+        rows = df2.copy()
+        self.show_table(rows, self.table_comm)
     #load info
     def load_info(self):
         try:

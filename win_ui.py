@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'win2.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,6 +49,14 @@ class Ui_MainWindow(object):
         self.table_his.setColumnCount(0)
         self.table_his.setRowCount(0)
         self.t_his.addTab(self.tab2, "")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.table_comm = QtWidgets.QTableWidget(self.tab)
+        self.table_comm.setGeometry(QtCore.QRect(10, 10, 1041, 551))
+        self.table_comm.setObjectName("table_comm")
+        self.table_comm.setColumnCount(0)
+        self.table_comm.setRowCount(0)
+        self.t_his.addTab(self.tab, "")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(320, 10, 81, 19))
         font = QtGui.QFont()
@@ -186,7 +194,7 @@ class Ui_MainWindow(object):
         self.b_info.setFont(font)
         self.b_info.setObjectName("b_info")
         self.b_test = QtWidgets.QPushButton(self.centralwidget)
-        self.b_test.setGeometry(QtCore.QRect(780, 170, 61, 31))
+        self.b_test.setGeometry(QtCore.QRect(780, 170, 71, 31))
         self.b_test.setObjectName("b_test")
         self.box_price = QtWidgets.QSpinBox(self.centralwidget)
         self.box_price.setGeometry(QtCore.QRect(390, 40, 91, 22))
@@ -328,21 +336,21 @@ class Ui_MainWindow(object):
         self.b_delStop.setFont(font)
         self.b_delStop.setObjectName("b_delStop")
         self.b_delAll = QtWidgets.QPushButton(self.centralwidget)
-        self.b_delAll.setGeometry(QtCore.QRect(270, 210, 131, 31))
+        self.b_delAll.setGeometry(QtCore.QRect(390, 210, 131, 31))
         font = QtGui.QFont()
         font.setFamily("新宋体")
         font.setPointSize(12)
         self.b_delAll.setFont(font)
         self.b_delAll.setObjectName("b_delAll")
         self.b_delStopB = QtWidgets.QPushButton(self.centralwidget)
-        self.b_delStopB.setGeometry(QtCore.QRect(410, 210, 181, 31))
+        self.b_delStopB.setGeometry(QtCore.QRect(530, 210, 181, 31))
         font = QtGui.QFont()
         font.setFamily("新宋体")
         font.setPointSize(12)
         self.b_delStopB.setFont(font)
         self.b_delStopB.setObjectName("b_delStopB")
         self.b_delStopS = QtWidgets.QPushButton(self.centralwidget)
-        self.b_delStopS.setGeometry(QtCore.QRect(610, 210, 171, 31))
+        self.b_delStopS.setGeometry(QtCore.QRect(720, 210, 161, 31))
         font = QtGui.QFont()
         font.setFamily("新宋体")
         font.setPointSize(12)
@@ -389,6 +397,9 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.b_orderlist.setFont(font)
         self.b_orderlist.setObjectName("b_orderlist")
+        self.b_test1 = QtWidgets.QPushButton(self.centralwidget)
+        self.b_test1.setGeometry(QtCore.QRect(860, 170, 71, 31))
+        self.b_test1.setObjectName("b_test1")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1104, 23))
@@ -399,7 +410,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.t_his.setCurrentIndex(0)
+        self.t_his.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -409,6 +420,7 @@ class Ui_MainWindow(object):
         self.t_his.setTabText(self.t_his.indexOf(self.t_wait), _translate("MainWindow", "等待执行 "))
         self.t_his.setTabText(self.t_his.indexOf(self.t_hold), _translate("MainWindow", "当前执有 "))
         self.t_his.setTabText(self.t_his.indexOf(self.tab2), _translate("MainWindow", "成交记录 "))
+        self.t_his.setTabText(self.t_his.indexOf(self.tab), _translate("MainWindow", "记录分析"))
         self.label.setText(_translate("MainWindow", "产 品："))
         self.label_2.setText(_translate("MainWindow", "到期月份:"))
         self.label_3.setText(_translate("MainWindow", "追加点位：  "))
@@ -439,4 +451,5 @@ class Ui_MainWindow(object):
         self.b_checkstop.setText(_translate("MainWindow", "捡查止损 "))
         self.b_pause.setText(_translate("MainWindow", "停止自动"))
         self.b_orderlist.setText(_translate("MainWindow", "更新交易"))
+        self.b_test1.setText(_translate("MainWindow", "Test1"))
 
