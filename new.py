@@ -147,11 +147,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         tradelist=web_trade.get_tradelist(hh)
 
         list1 = tradelist
-        list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
-        list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
-        df1 = list1[['buy', 'sell', 'trade_price', 'trade_time']]
+        #list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
+        #list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
+        df1 = list1[['trade_qty', 'trade_price', 'trade_time']]
         df2 = df1.fillna(0)
-        df2.columns = ['buy', 'sell', 'price', 'time']
+        df2.columns = ['bs', 'price', 'time']
         h = HS()
         df2 = h.ray(df2)
 
