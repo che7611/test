@@ -55,6 +55,9 @@ class HS:
                 data['pcyl_all'] = 0
                 data['all_kp'] = []
 
+                data['cb'] = 0  # 成本
+                data['all_price'] = 0
+
             if msg[0]>0:
                 data['jy'] += 1
                 data['all_jy_add'] += 1
@@ -89,9 +92,7 @@ class HS:
 
             if data['jy'] != 0:
                 data['cb'] = data['all_price'] / data['jy']
-            else:
-                data['cb'] = 0  # 成本
-                data['all_price'] = 0
+
             data['time'] = msg[-1]
 
 
@@ -104,7 +105,9 @@ class HS:
             1    1   30941.0   2018/05/11 09:15:29
             """
         res = []
-        ind=0
+        ind = 0
+        is_ind = -1
+        cbyl = 0
         dts=self.datas()
         dts.send(None)
         while ind<len(df.values):
@@ -119,10 +122,11 @@ class HS:
                 ak_p = [ak[1] for ak in data['all_kp'] if ak[0] < 0]
                 yscb = round(sum(ak_k)/len(ak_k),2) if msg[0] < 0 else round(sum(ak_p)/len(ak_k),2)
                 cb = round(sum(ak_k)/len(ak_k),2) if msg[0] > 0 else round(sum(ak_p)/len(ak_k),2)
-            jcbs=(data['wcds1']+abs(data['jy']))*sxf*2/50
-            jcb = round(cb+jcbs,2) if data['jy']>0 else round(cb-jcbs,2) # 净成本
+            jcbs=(data['wcds1']*2+abs(data['jy']))*sxf/50  # data['wcds1']+
+            jcb = round(data['cb']+jcbs,2) if data['jy']>0 else round(data['cb']-jcbs,2) # 净成本
             # yl = round(-data['jy'] * (data['cb'] - pri), 2)  # 持仓盈利
             # cbyl = data['pcyl'] if data['jy'] == 0 else 0  # 此笔盈利
+            cbyl += data['pcyl'] # 此笔盈利
             pjyl = round(data['all'] / data['wcds'],2) if data['wcds']>0 else 0 # 平均盈利
             huihuapj = round(data['pcyl_all'] / data['wcds1'],2) if data['wcds1']>0 else 0  # 会话平均盈利
             zcb = round(data['sum_price'] / data['jy'], 2) if data['jy'] != 0 else round(data['sum_price'], 2) # 持仓成本
@@ -130,9 +134,13 @@ class HS:
             jzcb = round(zcb+jzcbs,2)  # 净持仓成本
             jlr = round(data['all'] * 50 - sxf * data['all_jy_add'],2)  # 净利润
             jpjlr = round(jlr / data['wcds'],2) if data['wcds']>0 else 0  # 净平均利润
-            res.append([data['time'],data['mai'], pri, data['jy'],yscb, cb,jcb, data['pcyl'], data['pcyl_all'], data['all'], pjyl, huihuapj, zcb,jzcb,
-                        data['all']*50,jlr, jpjlr,round(sxf*data['all_jy_add'],2), data['wcds'], data['dbs']])
+
+            if ind != is_ind or (ind == is_ind and data['jy'] == 0):
+                res.append([data['time'],msg[0], pri, data['jy'],yscb, cb,jcb, cbyl, data['pcyl_all'], data['all'], pjyl, huihuapj, zcb,jzcb,
+                            data['all']*50,jlr, jpjlr,round(sxf*data['all_jy_add'],2), data['wcds'], data['dbs']])
+                cbyl = 0
             data['dbs'] += 1 if data['jy'] == 0 else 0 # 序号
+            is_ind = ind
 
         res = pd.DataFrame(res)
         res.columns = ['时间','开仓', '当前价', '持仓','原始成本', '会话成本', '净会话成本', '此笔盈利', '会话盈利', '总盈利','总平均盈利','会话平均盈利','持仓成本','净持仓成本','利润','净利润','净平均利润','手续费','已平仓','序号']
@@ -140,10 +148,9 @@ class HS:
 
 if __name__ == "__main__":
     h = HS()
-    dd=h.get_data(r'D:\tools\Tools\May_2018\2018-5-7\2018May11.txt')  # 2018May2.txt  2018May11.txt
+    dd=h.get_data(r'D:\\2018May25.txt')  # 2018May2.txt  2018May11.txt
     res=h.ray(dd)
     print(res)
-    print(len(dd),dd)
     import os
     if os.path.isfile('a.xls'):
         os.remove('a.xls')
