@@ -14,18 +14,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        self.timer=QTimer(self)
-        self.b_autostop.setEnabled(True)
-        self.b_pause.setEnabled(False)
+        #self.timer=QTimer(self)
+        #self.b_autostop.setEnabled(True)
+        #self.b_pause.setEnabled(False)
         self.setWindowTitle("海通期货交易助手V1.1")
         self.l_user.setText("")
         self.l_pwd.setText("")
 
-        self.timer.timeout.connect(self.t_autodo)
+        #self.timer.timeout.connect(self.t_autodo)
         # Login
         self.b_login.clicked.connect(self.c_login)
-        self.b_autostop.clicked.connect(self.c_autostop)
-        self.b_pause.clicked.connect(self.c_pause)
+        #self.b_autostop.clicked.connect(self.c_autostop)
+        #self.b_pause.clicked.connect(self.c_pause)
         self.b_checkstop.clicked.connect(self.c_checkstop)
         self.b_buy.clicked.connect(self.c_buy)
         self.b_sell.clicked.connect(self.c_sell)
@@ -39,6 +39,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.b_delStopB.clicked.connect(self.c_delStopB)
         self.b_delStopS.clicked.connect(self.c_delStopS)
         self.b_info.clicked.connect(self.c_info)
+        self.rStop1.clicked.connect(self.chg_radio)
+        self.rStop2.clicked.connect(self.chg_radio)
+        self.rStop3.clicked.connect(self.chg_radio)
         # commbox box_product
         self.box_product.currentTextChanged.connect(self.prod_change)
         self.box_stop_type.currentTextChanged.connect(self.stop_change)
@@ -51,7 +54,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         add = self.box_add.value()
         diff = self.box_diff.value()
         nostop = self.box_nostop.value()
-        time = self.box_time.value()
+        #time = self.box_time.value()
         add2 = self.box_add2.value()
         qty = self.box_qty.value()
         info = {
@@ -59,7 +62,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "add": add,
             "diff": diff,
             "nostop": nostop,
-            "time": time,
             "add2": add2,
             "qty": qty,
         }
@@ -88,7 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             w.statusBar().showMessage('没有登陆!')
             return
         print("atuo exec Bgin:")
-        diff=self.box_time.value()*1000
+        #diff=self.box_time.value()*1000
         self.timer.start(diff)
         self.b_autostop.setEnabled(False)
         self.b_pause.setEnabled(True)
@@ -134,9 +136,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 return False
     #Test button
     def c_test(self):
-        print(web_trade.verify_out1())
+        if self.check_login():return
+        #get orderlist
+        hh = web_trade.get_orderlist()
+        if web_trade.status==999:
+            print("get_orderlist没有返回数据[c_orderlist]")
+            return -1
+        tradelist=web_trade.get_tradelist(hh)
 
-    #test1 button
+        list1 = tradelist
+        #list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
+        #list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
+        df1 = list1[['trade_qty', 'trade_price', 'trade_time']]
+        df2 = df1.fillna(0)
+        df2.columns = ['bs', 'price', 'time']
+        h = HS()
+        df2 = h.ray(df2)
+
+        set1 = df2.tail(5).head(1)
+        hold=set1['持仓'].values[0]
+        h_cost=set1['原始成本'].values[0]
+        h_costA = set1['净会话成本'].values[0]
+        h_costB = set1['净持仓成本'].values[0]
+        print("参考开仓成本  %d@%f" %(hold,h_cost))
+        self.txt1.setText("%d@%f" %(hold,h_cost))
+        self.txt2.setText ( "%d@%f" % (hold, h_costA))
+        self.txt3.setText ( "%d@%f" % (hold, h_costB))
+    #test1 buttonAB
     def c_test1(self):
         if self.check_login():return
         #get orderlist
@@ -170,7 +196,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.box_add.setValue(info["add"])
                 self.box_diff.setValue(info["diff"])
                 self.box_nostop.setValue(info["nostop"])
-                self.box_time.setValue(info["time"])
+                #self.box_time.setValue(info["time"])
                 self.box_qty.setValue(info["qty"])
                 self.box_add2.setValue(info["add2"])
         except Exception as e:
@@ -219,6 +245,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         cols = ['refno', 'product','trade_price','trade_qty','trade_time', 'price', 'filled_qty','r_qty', 'initiator', 'order_time', 'status']
         rows=hold[cols].copy()
         self.show_table(rows, self.table_hold)
+        w.statusBar().showMessage("交易刷新成功!")
 
     #触发多单
     def c_stopbuy(self):
@@ -350,6 +377,44 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as e:
             print("prod_change Try_Error:",e)
 
+    #radio button rStop1
+    def c_rStop1(self):
+        self.gr_stop.setTitle("止损选项--radio 1")
+
+    #chg radio
+    def chg_radio(self):
+        if self.rStop1.isChecked() and len(self.txt1.text())>1:
+            self.get_stop(self.txt1.text())
+            #self.grStop.setTitle("止损选项--radio 1")
+        elif self.rStop2.isChecked() and len(self.txt2.text())>1:
+            self.get_stop(self.txt2.text())
+            #self.grStop.setTitle("止损选项--radio 2")
+        elif self.rStop3.isChecked() and len(self.txt3.text())>1:
+            self.get_stop(self.txt3.text())
+            #self.grStop.setTitle("止损选项--radio 3")
+
+    def get_stop(self,txt):
+        print(txt)
+        hold = int(txt[0:txt.find('@')])
+        cost = float(txt[txt.find('@') + 1:])
+        stop_point = self.box_diff.value()
+        nostop = self.box_nostop.value()
+        addon=self.box_add.value()
+
+        if hold>0:
+            lots=nostop-hold
+            StopPrice=cost-stop_point
+            sign='<'
+        else:
+            lots=-hold-nostop
+            StopPrice=cost+stop_point
+            sign='>'
+
+        inf="%d@%s%f" %(lots,sign,StopPrice)
+        print(inf)
+        self.grStop.setTitle(inf)
+
+
 if __name__ == "__main__":
     import sys
 
@@ -368,6 +433,9 @@ if __name__ == "__main__":
     color:red;
     border: 1px solid #5465E7;
     font-size:12px;
+    }
+    #txt1,#txt2,#txt3{
+    color:red;
     }
     QPushButton
     {

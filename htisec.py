@@ -155,7 +155,7 @@ class htisec_web(object):
             if self.status==0:
                 return
             get2=self._s.get(url ,verify=False,timeout=10)
-            print("Get_url %s %s,Re:%s" %(get2.url,get2.status_code,get2.history))
+            #print("Get_url %s %s,Re:%s" %(get2.url,get2.status_code,get2.history))
             if  self.verify_out(get2):
                 return "ERROR"
             else:
