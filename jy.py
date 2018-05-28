@@ -2,6 +2,7 @@ import time
 import random
 import pandas as pd
 
+SXF = 33.54
 
 class HS:
 
@@ -22,7 +23,8 @@ class HS:
         data = {
             'jy': 0,  # 交易手数
             'price': 0,  # 交易价格
-            'cb': 0,  # 成本
+            'cb': 0,  # 总成本
+            'jcb':0,  # 净会话成本
             'start_time': 0,  # 开始时间
             'end_time': 0,  # 结束时间
             'mai': 0,  # 买卖
@@ -56,6 +58,7 @@ class HS:
                 data['all_kp'] = []
 
                 data['cb'] = 0  # 成本
+                data['jcb'] = 0 # 净成本
                 data['all_price'] = 0
 
             if msg[0]>0:
@@ -92,13 +95,16 @@ class HS:
 
             if data['jy'] != 0:
                 data['cb'] = data['all_price'] / data['jy']
+                jcbs = SXF * 2 / 50 * data['jy']
+                sum_cb = sum([cb[1] if cb[0]>0 else -cb[1] for cb in data['all_kp']]) # 净成本
+                data['jcb'] = int((sum_cb-jcbs)/data['jy']) if data['jy']<0 else int((sum_cb-jcbs)/data['jy'])+1
 
             data['time'] = msg[-1]
 
 
 
 
-    def ray(self,df,sxf=33.54):
+    def ray(self,df):
         """ df:
                  bs    price                 time
             0    -1   30934.0   2018/05/11 09:15:26
@@ -120,24 +126,27 @@ class HS:
             else:
                 ak_k = [ak[1] for ak in data['all_kp'] if ak[0] > 0]
                 ak_p = [ak[1] for ak in data['all_kp'] if ak[0] < 0]
-                yscb = round(sum(ak_k)/len(ak_k),2) if msg[0] < 0 else round(sum(ak_p)/len(ak_k),2)
-                cb = round(sum(ak_k)/len(ak_k),2) if msg[0] > 0 else round(sum(ak_p)/len(ak_k),2)
-            jcbs=(data['wcds1']*2+abs(data['jy']))*sxf/50  # data['wcds1']+
-            jcb = round(data['cb']+jcbs,2) if data['jy']>0 else round(data['cb']-jcbs,2) # 净成本
+                yscb = round(sum(ak_k)/len(ak_k),2) if msg[0] < 0 else round(sum(ak_p)/len(ak_p),2)
+                cb = round(sum(ak_k)/len(ak_k),2) if msg[0] > 0 else round(sum(ak_p)/len(ak_p),2)
+            # jcbs=(data['wcds1']+abs(data['jy']))*SXF/50  # data['wcds1']+
+            # jcb = round(data['cb']+jcbs,2) if data['jy']>0 else round(data['cb']-jcbs,2) # 净成本
+            #jcbs = SXF * 2 / 50  # data['wcds1']+
+            #jcb = round(data['jcb'] + jcbs, 2) if data['jy'] > 0 else round(data['cb'] - jcbs, 2)  # 净成本
+            jcb = data['jcb']
             # yl = round(-data['jy'] * (data['cb'] - pri), 2)  # 持仓盈利
             # cbyl = data['pcyl'] if data['jy'] == 0 else 0  # 此笔盈利
             cbyl += data['pcyl'] # 此笔盈利
             pjyl = round(data['all'] / data['wcds'],2) if data['wcds']>0 else 0 # 平均盈利
             huihuapj = round(data['pcyl_all'] / data['wcds1'],2) if data['wcds1']>0 else 0  # 会话平均盈利
             zcb = round(data['sum_price'] / data['jy'], 2) if data['jy'] != 0 else round(data['sum_price'], 2) # 持仓成本
-            jzcbs=(data['wcds']+abs(data['jy']))*sxf*2/50
+            jzcbs=(data['wcds']+abs(data['jy']))*SXF*2/50
             jzcb = round(zcb+jzcbs,2)  # 净持仓成本
-            jlr = round(data['all'] * 50 - sxf * data['all_jy_add'],2)  # 净利润
+            jlr = round(data['all'] * 50 - SXF * data['all_jy_add'],2)  # 净利润
             jpjlr = round(jlr / data['wcds'],2) if data['wcds']>0 else 0  # 净平均利润
 
             if ind != is_ind or (ind == is_ind and data['jy'] == 0):
                 res.append([data['time'],msg[0], pri, data['jy'],yscb, cb,jcb, cbyl, data['pcyl_all'], data['all'], pjyl, huihuapj, zcb,jzcb,
-                            data['all']*50,jlr, jpjlr,round(sxf*data['all_jy_add'],2), data['wcds'], data['dbs']])
+                            data['all']*50,jlr, jpjlr,round(SXF*data['all_jy_add'],2), data['wcds'], data['dbs']])
                 cbyl = 0
             data['dbs'] += 1 if data['jy'] == 0 else 0 # 序号
             is_ind = ind
@@ -148,7 +157,7 @@ class HS:
 
 if __name__ == "__main__":
     h = HS()
-    dd=h.get_data(r'D:\\2018May25.txt')  # 2018May2.txt  2018May11.txt
+    dd=h.get_data(r'D:\\2018May25a.txt')  # 2018May2.txt  2018May11.txt
     res=h.ray(dd)
     print(res)
     import os
