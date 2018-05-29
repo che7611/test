@@ -95,9 +95,11 @@ class HS:
 
             if data['jy'] != 0:
                 data['cb'] = data['all_price'] / data['jy']
-                jcbs = SXF * 2 / 50 * data['jy']
-                sum_cb = sum([cb[1] if cb[0]>0 else -cb[1] for cb in data['all_kp']]) # 净成本
-                data['jcb'] = int((sum_cb-jcbs)/data['jy']) if data['jy']<0 else int((sum_cb-jcbs)/data['jy'])+1
+                # jcbs = SXF * 2 / 50 * data['jy']
+                jcbs = (data['wcds1'] + abs(data['jy'])) * SXF * 2 / 50 / data['jy']
+                #sum_cb = sum([cb[1] if cb[0]>0 else -cb[1] for cb in data['all_kp']]) # 净成本
+                sum_cb = data['cb']+jcbs  # (sum_cb-jcbs)/data['jy']
+                data['jcb'] = int(sum_cb) if data['jy']<0 else (int(sum_cb)+1 if sum_cb>int(sum_cb) else int(sum_cb))
 
             data['time'] = msg[-1]
 
@@ -139,8 +141,10 @@ class HS:
             pjyl = round(data['all'] / data['wcds'],2) if data['wcds']>0 else 0 # 平均盈利
             huihuapj = round(data['pcyl_all'] / data['wcds1'],2) if data['wcds1']>0 else 0  # 会话平均盈利
             zcb = round(data['sum_price'] / data['jy'], 2) if data['jy'] != 0 else round(data['sum_price'], 2) # 持仓成本
-            jzcbs=(data['wcds']+abs(data['jy']))*SXF*2/50
-            jzcb = round(zcb+jzcbs,2)  # 净持仓成本
+            jzcbs = (data['wcds']+abs(data['jy']))*SXF*2/50/data['jy'] if data['jy'] != 0 else 0  # SXF * 2 / 50 * data['jy']
+            jzcb = (data['sum_price'] / data['jy'] + jzcbs) if data['jy'] != 0 else 0  # 净持仓成本
+            jzcb = int(jzcb)+1 if jzcb>int(jzcb) else int(jzcb)
+
             jlr = round(data['all'] * 50 - SXF * data['all_jy_add'],2)  # 净利润
             jpjlr = round(jlr / data['wcds'],2) if data['wcds']>0 else 0  # 净平均利润
 
@@ -157,11 +161,11 @@ class HS:
 
 if __name__ == "__main__":
     h = HS()
-    dd=h.get_data(r'D:\\2018May25a.txt')  # 2018May2.txt  2018May11.txt
+    dd=h.get_data(r'D:\tools\Tools\May_2018\2018-5-7\2018May25a.txt')  # 2018May2.txt  2018May11.txt
     res=h.ray(dd)
     print(res)
     import os
-    if os.path.isfile('a.xls'):
-        os.remove('a.xls')
-    res.to_excel('a.xls')
+    if os.path.isfile('c.xls'):
+        os.remove('c.xls')
+    res.to_excel('c.xls')
 
