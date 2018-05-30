@@ -248,7 +248,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>310</x>
       <y>0</y>
       <width>851</width>
       <height>201</height>
@@ -265,7 +265,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>9</y>
         <width>811</width>
         <height>91</height>
        </rect>
@@ -276,7 +276,7 @@
       <widget class="QPushButton" name="b_checkstop">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>630</x>
          <y>50</y>
          <width>81</width>
          <height>24</height>
@@ -289,13 +289,13 @@
         </font>
        </property>
        <property name="text">
-        <string>捡查止损 </string>
+        <string>逐单止损 </string>
        </property>
       </widget>
       <widget class="QSpinBox" name="box_nostop">
        <property name="geometry">
         <rect>
-         <x>733</x>
+         <x>660</x>
          <y>16</y>
          <width>58</width>
          <height>22</height>
@@ -319,7 +319,7 @@
       <widget class="QSpinBox" name="box_add">
        <property name="geometry">
         <rect>
-         <x>428</x>
+         <x>355</x>
          <y>16</y>
          <width>49</width>
          <height>22</height>
@@ -343,7 +343,7 @@
       <widget class="QLabel" name="label_5">
        <property name="geometry">
         <rect>
-         <x>653</x>
+         <x>580</x>
          <y>18</y>
          <width>71</width>
          <height>19</height>
@@ -362,7 +362,7 @@
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>347</x>
+         <x>274</x>
          <y>17</y>
          <width>71</width>
          <height>19</height>
@@ -381,7 +381,7 @@
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
-         <x>503</x>
+         <x>430</x>
          <y>17</y>
          <width>80</width>
          <height>19</height>
@@ -400,7 +400,7 @@
       <widget class="QSpinBox" name="box_diff">
        <property name="geometry">
         <rect>
-         <x>583</x>
+         <x>510</x>
          <y>15</y>
          <width>54</width>
          <height>24</height>
@@ -506,6 +506,25 @@
        </property>
        <property name="readOnly">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="b_gostop">
+       <property name="geometry">
+        <rect>
+         <x>490</x>
+         <y>50</y>
+         <width>81</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>新宋体</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>止  损 </string>
        </property>
       </widget>
      </widget>

@@ -34,6 +34,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.b_orderlist.clicked.connect(self.c_orderlist)
         self.b_test.clicked.connect(self.c_test)
         self.b_test1.clicked.connect(self.c_test1)
+        self.b_gostop.clicked.connect(self.c_gostop)
         self.b_delStop.clicked.connect(self.c_delStop)
         self.b_delAll.clicked.connect(self.c_delAll)
         self.b_delStopB.clicked.connect(self.c_delStopB)
@@ -46,6 +47,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.box_product.currentTextChanged.connect(self.prod_change)
         self.box_stop_type.currentTextChanged.connect(self.stop_change)
         self.load_info()
+        self.box_diff.valueChanged.connect(self.chg_radio)
+        self.box_nostop.valueChanged.connect(self.chg_radio)
+        self.box_add.valueChanged.connect(self.chg_radio)
 
 
     #save person info
@@ -153,7 +157,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         h = HS()
         df2 = h.ray(df2)
 
-        set1 = df2.tail(5).head(1)
+        #set1 = df2.tail(45).head(1)
+        set1=df2.tail(1)
         hold=set1['持仓'].values[0]
         h_cost=set1['原始成本'].values[0]
         h_costA = set1['净会话成本'].values[0]
@@ -246,6 +251,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         rows=hold[cols].copy()
         self.show_table(rows, self.table_hold)
         w.statusBar().showMessage("交易刷新成功!")
+
+    #触发空单
+    #触发空单
+    def c_gostop(self):
+        if self.check_login(): return
+
+        if self.rStop1.isChecked() and len(self.txt1.text())>1:
+            Lots,StopPrice=self.get_stop(self.txt1.text())
+        elif self.rStop2.isChecked() and len(self.txt2.text())>1:
+            Lots, StopPrice = self.get_stop(self.txt2.text())
+        elif self.rStop3.isChecked() and len(self.txt3.text())>1:
+            Lots, StopPrice = self.get_stop(self.txt3.text())
+
+        print(Lots,StopPrice)
+        if Lots==0:
+            return
+        addon=self.box_add.value()
+        if Lots>0:
+            web_trade.order_stopS(StopPrice,Lots,'HSIM8',addon)
+        else:
+            web_trade.order_stopB(StopPrice,-Lots, 'HSIM8',addon)
+
 
     #触发多单
     def c_stopbuy(self):
@@ -404,15 +431,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if hold>0:
             lots=nostop-hold
             StopPrice=cost-stop_point
-            sign='<'
-        else:
+            sign='L<'
+        elif hold<0:
             lots=-hold-nostop
             StopPrice=cost+stop_point
-            sign='>'
+            sign='L>'
+        else:
+            lots=0
+            StopPrice=0
+            sign='L>'
 
-        inf="%d@%s%f" %(lots,sign,StopPrice)
-        print(inf)
+        inf="%d@%s%f+%d" %(lots,sign,StopPrice,addon)
+        #print(inf)
         self.grStop.setTitle(inf)
+        return lots,StopPrice
 
 
 if __name__ == "__main__":
