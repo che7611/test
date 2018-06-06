@@ -43,6 +43,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.rStop1.clicked.connect(self.chg_radio)
         self.rStop2.clicked.connect(self.chg_radio)
         self.rStop3.clicked.connect(self.chg_radio)
+        self.rClose1.clicked.connect(self.chg_close)
+        self.rClose2.clicked.connect(self.chg_close)
+        self.rClose3.clicked.connect(self.chg_close)
         # commbox box_product
         self.box_product.currentTextChanged.connect(self.prod_change)
         self.box_stop_type.currentTextChanged.connect(self.stop_change)
@@ -50,7 +53,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.box_diff.valueChanged.connect(self.chg_radio)
         self.box_nostop.valueChanged.connect(self.chg_radio)
         self.box_add.valueChanged.connect(self.chg_radio)
-
+        self.box_c1.valueChanged.connect(self.boxc1_chg)
+        self.box_c2.valueChanged.connect(self.boxc2_chg)
 
     #save person info
     def c_info(self):
@@ -167,6 +171,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt1.setText("%d@%f" %(hold,h_cost))
         self.txt2.setText ( "%d@%f" % (hold, h_costA))
         self.txt3.setText ( "%d@%f" % (hold, h_costB))
+        self.txt_c1.setText("%d@%f" %(hold,h_cost))
+        self.txt_c2.setText("%d@%f" % (hold, h_costA))
+        self.txt_c3.setText("%d@%f" % (hold, h_costB))
     #test1 buttonAB
     def c_test1(self):
         if self.check_login():return
@@ -408,19 +415,49 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def c_rStop1(self):
         self.gr_stop.setTitle("止损选项--radio 1")
 
+    #box_c1 change
+    def boxc1_chg(self):
+        vv=self.box_c1.value()
+        self.box_c2.setValue(vv*50)
+
+    #box_c2 change
+    def boxc2_chg(self):
+        mm=self.box_c2.value()
+        self.box_c1.setValue(mm/50)
+
+    #close radio change
+    def chg_close(self):
+        txt=self.get_close_text()
+        if len(txt)>1:
+            print(self.get_lots(txt))
+
+    #get close text
+    def get_close_text(self):
+        if self.rClose1.isChecked():
+            return  self.txt_c1.text()
+        elif self.rClose2.isChecked():
+            return self.txt_c2.text()
+        elif self.rClose3.isChecked():
+            return self.txt_c3.text()
+
     #chg radio
     def chg_radio(self):
-        if self.rStop1.isChecked() and len(self.txt1.text())>1:
-            self.get_stop(self.txt1.text())
-            #self.grStop.setTitle("止损选项--radio 1")
-        elif self.rStop2.isChecked() and len(self.txt2.text())>1:
-            self.get_stop(self.txt2.text())
-            #self.grStop.setTitle("止损选项--radio 2")
-        elif self.rStop3.isChecked() and len(self.txt3.text())>1:
-            self.get_stop(self.txt3.text())
-            #self.grStop.setTitle("止损选项--radio 3")
+        txt=self.get_stop_text()
+        if txt==None:
+            return
+        if len(txt)>1:
+            print(self.get_lots(txt))
 
-    def get_stop(self,txt):
+    def get_stop_text(self):
+        if self.rStop1.isChecked():
+            return self.txt1.text()
+        elif self.rStop3.isChecked():
+            return self.txt2.text()
+        elif self.rStop3.isChecked():
+            return self.txt3.text()
+
+
+    def get_lots(self,txt):
         print(txt)
         hold = int(txt[0:txt.find('@')])
         cost = float(txt[txt.find('@') + 1:])

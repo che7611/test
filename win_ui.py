@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'win2.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -229,15 +229,16 @@ class Ui_MainWindow(object):
         self.box_c3.setProperty("value", 2)
         self.box_c3.setObjectName("box_c3")
         self.box_c1 = QtWidgets.QSpinBox(self.grClose)
-        self.box_c1.setGeometry(QtCore.QRect(355, 16, 49, 22))
+        self.box_c1.setGeometry(QtCore.QRect(313, 16, 71, 22))
         font = QtGui.QFont()
         font.setFamily("宋体")
         font.setPointSize(12)
         font.setBold(True)
         font.setWeight(75)
         self.box_c1.setFont(font)
-        self.box_c1.setMaximum(50)
-        self.box_c1.setProperty("value", 0)
+        self.box_c1.setMinimum(0)
+        self.box_c1.setMaximum(500)
+        self.box_c1.setProperty("value", 10)
         self.box_c1.setObjectName("box_c1")
         self.label_16 = QtWidgets.QLabel(self.grClose)
         self.label_16.setGeometry(QtCore.QRect(590, 18, 51, 19))
@@ -247,7 +248,7 @@ class Ui_MainWindow(object):
         self.label_16.setFont(font)
         self.label_16.setObjectName("label_16")
         self.label_17 = QtWidgets.QLabel(self.grClose)
-        self.label_17.setGeometry(QtCore.QRect(280, 17, 61, 19))
+        self.label_17.setGeometry(QtCore.QRect(240, 17, 61, 19))
         font = QtGui.QFont()
         font.setFamily("Adobe Arabic")
         font.setPointSize(12)
@@ -268,8 +269,9 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.box_c2.setFont(font)
-        self.box_c2.setMinimum(99)
-        self.box_c2.setMaximum(500000)
+        self.box_c2.setMinimum(0)
+        self.box_c2.setMaximum(499998)
+        self.box_c2.setSingleStep(50)
         self.box_c2.setProperty("value", 1000)
         self.box_c2.setDisplayIntegerBase(10)
         self.box_c2.setObjectName("box_c2")
@@ -557,7 +559,7 @@ class Ui_MainWindow(object):
         self.rClose1.setText(_translate("MainWindow", "参考开仓价"))
         self.rClose2.setText(_translate("MainWindow", "参考会话成本 "))
         self.rClose3.setText(_translate("MainWindow", "参考总成本 "))
-        self.b_close1.setText(_translate("MainWindow", "平 仓"))
+        self.b_close1.setText(_translate("MainWindow", "止 盈"))
         self.c_close1.setText(_translate("MainWindow", "T+1"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_stop), _translate("MainWindow", "止损区"))
         self.label.setText(_translate("MainWindow", "产 品："))
