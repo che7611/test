@@ -49,12 +49,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # commbox box_product
         self.box_product.currentTextChanged.connect(self.prod_change)
         self.box_stop_type.currentTextChanged.connect(self.stop_change)
-        self.load_info()
         self.box_diff.valueChanged.connect(self.chg_radio)
         self.box_nostop.valueChanged.connect(self.chg_radio)
         self.box_add.valueChanged.connect(self.chg_radio)
         self.box_c1.valueChanged.connect(self.boxc1_chg)
         self.box_c2.valueChanged.connect(self.boxc2_chg)
+        self.box_c3.valueChanged.connect(self.chg_close)
+        self.b_close1.clicked.connect(self.cb_close1)
+
+        self.load_info()
 
     #save person info
     def c_info(self):
@@ -161,8 +164,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         h = HS()
         df2 = h.ray(df2)
 
-        #set1 = df2.tail(45).head(1)
-        set1=df2.tail(1)
+        set1 = df2.tail(3).head(1)
+        #set1=df2.tail(1)
         hold=set1['持仓'].values[0]
         h_cost=set1['原始成本'].values[0]
         h_costA = set1['净会话成本'].values[0]
@@ -263,22 +266,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #触发空单
     def c_gostop(self):
         if self.check_login(): return
-
-        if self.rStop1.isChecked() and len(self.txt1.text())>1:
-            Lots,StopPrice=self.get_stop(self.txt1.text())
-        elif self.rStop2.isChecked() and len(self.txt2.text())>1:
-            Lots, StopPrice = self.get_stop(self.txt2.text())
-        elif self.rStop3.isChecked() and len(self.txt3.text())>1:
-            Lots, StopPrice = self.get_stop(self.txt3.text())
-
+        Lots,StopPrice=self.calc_stop()
         print(Lots,StopPrice)
         if Lots==0:
             return
         addon=self.box_add.value()
+
+        prod='HSIM8'
+
         if Lots>0:
-            web_trade.order_stopS(StopPrice,Lots,'HSIM8',addon)
+            web_trade.order_stopS(StopPrice,Lots,prod,addon)
         else:
-            web_trade.order_stopB(StopPrice,-Lots, 'HSIM8',addon)
+            web_trade.order_stopB(StopPrice,-Lots, prod,addon)
 
 
     #触发多单
@@ -417,19 +416,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #box_c1 change
     def boxc1_chg(self):
-        vv=self.box_c1.value()
-        self.box_c2.setValue(vv*50)
+        txt = self.get_close_text()
+        if len(txt)<1:
+            return
+        hold = int(txt[0:txt.find('@')])
+        cost = float(txt[txt.find('@') + 1:])
+        if hold==0:
+            return
+
+        point=50
+        win = self.box_c1.value()
+        profit = abs(hold) * point * win
+        self.box_c2.setValue(profit)
+        self.chg_close()
 
     #box_c2 change
     def boxc2_chg(self):
-        mm=self.box_c2.value()
-        self.box_c1.setValue(mm/50)
+        txt = self.get_close_text()
+        if len(txt)<1:
+            return
+        hold = int(txt[0:txt.find('@')])
+        cost = float(txt[txt.find('@') + 1:])
+        if hold==0:
+            return
+
+        point = 50
+        profit = self.box_c2.value()
+        win=profit/point/abs(hold)
+        self.box_c1.setValue(win)
+        self.chg_close()
 
     #close radio change
     def chg_close(self):
-        txt=self.get_close_text()
-        if len(txt)>1:
-            print(self.get_lots(txt))
+        self.calc_close()
 
     #get close text
     def get_close_text(self):
@@ -440,13 +459,62 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif self.rClose3.isChecked():
             return self.txt_c3.text()
 
+    #calc close Price
+    def calc_close(self):
+        txt=self.get_close_text()
+        if txt==None or len(txt)<2:
+            return
+        hold = int(txt[0:txt.find('@')])
+        cost = float(txt[txt.find('@') + 1:])
+        if hold==0:
+            return
+
+        point=50
+        win = self.box_c1.value()
+        profit=self.box_c2.value()
+        lock=self.box_c3.value()
+        #hold buy
+        if hold>0:
+            ClosePrice=cost+win
+            hold=-hold+lock
+        #hold sell
+        else:
+            ClosePrice = cost -win
+            hold=-hold-lock
+
+        inf="止盈单:%d@%d" %(hold,ClosePrice)
+        print(inf)
+        self.grClose.setTitle(inf)
+        return hold,ClosePrice
+
+    #click 止盈
+    def cb_close1(self):
+        if self.check_login(): return
+
+        prod = 'HSIM8'
+
+        if self.c_close1.isChecked():
+            web_trade.orderdata['ahfs'] = "on"
+        else:
+            web_trade.orderdata['ahfs'] = ""
+
+        Lots,Price=self.calc_close()
+
+        prod_code=prod[0:3]
+        prod_month=prod[3:5]
+        web_trade.orderdata['prod_code'] = prod_code
+        web_trade.orderdata['contract_mth'] = prod_month
+
+        if Lots >0:
+            web_trade.order_buy(Price, Lots, prod_code=prod_code)
+            print("%s %d@%d" % (prod,  Lots, Price))
+        else:
+            web_trade.order_sell(Price, -Lots, prod_code=prod_code)
+            print("%s -%d@%d" % (prod, Lots, Price))
+
     #chg radio
     def chg_radio(self):
-        txt=self.get_stop_text()
-        if txt==None:
-            return
-        if len(txt)>1:
-            print(self.get_lots(txt))
+        self.calc_stop()
 
     def get_stop_text(self):
         if self.rStop1.isChecked():
@@ -456,9 +524,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif self.rStop3.isChecked():
             return self.txt3.text()
 
-
-    def get_lots(self,txt):
-        print(txt)
+    def calc_stop(self):
+        txt=self.get_stop_text()
+        if txt==None or len(txt)<2:
+            return
         hold = int(txt[0:txt.find('@')])
         cost = float(txt[txt.find('@') + 1:])
         stop_point = self.box_diff.value()
@@ -478,11 +547,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             StopPrice=0
             sign='L>'
 
-        inf="%d@%s%f+%d" %(lots,sign,StopPrice,addon)
-        #print(inf)
+        inf="上损单:%d@%s%f+%d" %(lots,sign,StopPrice,addon)
+        print(inf)
         self.grStop.setTitle(inf)
-        return lots,StopPrice
-
+        return  lots,StopPrice
 
 if __name__ == "__main__":
     import sys
