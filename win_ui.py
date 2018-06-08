@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'win2.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -114,6 +114,10 @@ class Ui_MainWindow(object):
         self.tab_stop.setObjectName("tab_stop")
         self.grStop = QtWidgets.QGroupBox(self.tab_stop)
         self.grStop.setGeometry(QtCore.QRect(14, 7, 811, 91))
+        font = QtGui.QFont()
+        font.setFamily("Adobe Arabic")
+        font.setPointSize(10)
+        self.grStop.setFont(font)
         self.grStop.setObjectName("grStop")
         self.b_checkstop = QtWidgets.QPushButton(self.grStop)
         self.b_checkstop.setGeometry(QtCore.QRect(630, 50, 81, 24))
@@ -208,7 +212,11 @@ class Ui_MainWindow(object):
         self.b_gostop.setFont(font)
         self.b_gostop.setObjectName("b_gostop")
         self.grClose = QtWidgets.QGroupBox(self.tab_stop)
-        self.grClose.setGeometry(QtCore.QRect(10, 100, 811, 91))
+        self.grClose.setGeometry(QtCore.QRect(10, 104, 811, 91))
+        font = QtGui.QFont()
+        font.setFamily("Adobe Arabic")
+        font.setPointSize(10)
+        self.grClose.setFont(font)
         self.grClose.setObjectName("grClose")
         self.b_close2 = QtWidgets.QPushButton(self.grClose)
         self.b_close2.setGeometry(QtCore.QRect(630, 50, 81, 24))
@@ -307,7 +315,7 @@ class Ui_MainWindow(object):
         self.b_close1.setFont(font)
         self.b_close1.setObjectName("b_close1")
         self.c_close1 = QtWidgets.QCheckBox(self.grClose)
-        self.c_close1.setGeometry(QtCore.QRect(760, 20, 51, 20))
+        self.c_close1.setGeometry(QtCore.QRect(754, 20, 51, 20))
         font = QtGui.QFont()
         font.setFamily("新宋体")
         font.setPointSize(12)

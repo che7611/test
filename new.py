@@ -9,6 +9,7 @@ from PyQt5.QtCore import QTimer
 import time
 import json
 import os
+import math
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -17,7 +18,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #self.timer=QTimer(self)
         #self.b_autostop.setEnabled(True)
         #self.b_pause.setEnabled(False)
-        self.setWindowTitle("海通期货交易助手V1.1")
+        self.setWindowTitle("海通期货交易助手V2.1")
         self.l_user.setText("")
         self.l_pwd.setText("")
 
@@ -147,34 +148,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 return False
     #Test button
     def c_test(self):
-        if self.check_login():return
+        if self.check_login(): return
+        self.show_stop()
 
-        #set1=df2.tail(1)
+    def show_stop(self):
         set1=self.set1
         hold=set1['持仓']
-        h_cost=set1['原始成本']
+        h_cost=math.ceil(set1['原始成本'])
         h_costA = set1['净会话成本']
         h_costB = set1['净持仓成本']
-        print("参考开仓成本  %d@%f" %(hold,h_cost))
+        #print("参考开仓成本  %d@%f" %(hold,h_cost))
         self.txt1.setText("%d@%f" %(hold,h_cost))
         self.txt2.setText ( "%d@%f" % (hold, h_costA))
         self.txt3.setText ( "%d@%f" % (hold, h_costB))
         self.txt_c1.setText("%d@%f" %(hold,h_cost))
         self.txt_c2.setText("%d@%f" % (hold, h_costA))
         self.txt_c3.setText("%d@%f" % (hold, h_costB))
-    #test1 buttonAB
+        self.calc_close()
+        self.calc_stop()
+    #test1 button
     def c_test1(self):
-        if self.check_login():return
-        #get orderlist
+        if self.check_login(): return
+
+        # get orderlist
         hh = web_trade.get_orderlist()
-        if web_trade.status==999:
+        if web_trade.status == 999:
             print("get_orderlist没有返回数据[c_orderlist]")
             return -1
-        tradelist=web_trade.get_tradelist(hh)
+        tradelist = web_trade.get_tradelist(hh)
+        self.get_comm(tradelist)
 
+    #取得会话记录
+    def get_comm(self,tradelist):
         list1 = tradelist
-        #list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
-        #list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
         df1 = list1[['trade_qty', 'trade_price', 'trade_time','product']]
         df2 = df1.fillna(0)
         df2.columns = ['bs', 'price', 'time','product']
@@ -247,6 +253,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         cols = ['refno', 'product','trade_price','trade_qty','trade_time', 'price', 'filled_qty','r_qty', 'initiator', 'order_time', 'status']
         rows=hold[cols].copy()
         self.show_table(rows, self.table_hold)
+        self.get_comm(tradelist)
+        self.show_stop()
         w.statusBar().showMessage("交易刷新成功!")
 
     #触发空单
@@ -258,9 +266,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if Lots==0:
             return
         addon=self.box_add.value()
-
-        prod='HSIM8'
-
+        prod = self.set1['合约']
         if Lots>0:
             web_trade.order_stopS(StopPrice,Lots,prod,addon)
         else:
@@ -339,7 +345,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         login = web_trade.login_1(user, pwd)
         pos=login.find(web_trade.url['sms'])
         if pos==-1:
+            w.statusBar().showMessage("登陆不成功!")
             return
+        w.statusBar().showMessage("短信验证!")
         sms, ok = QInputDialog.getText(self, '短信验证', '请填写短信验证码：')
         if ok:
             res=web_trade.login_2(login,sms)
@@ -403,82 +411,132 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #box_c1 change
     def boxc1_chg(self):
-        txt = self.get_close_text()
-        if len(txt)<1:
+        if not hasattr(self,'set1'):
+            print('Not Set1')
             return
-        hold = int(txt[0:txt.find('@')])
-        cost = float(txt[txt.find('@') + 1:])
+
+        hold=self.set1['持仓']
         if hold==0:
             return
 
-        point=50
+        if self.rClose1.isChecked():
+            cost=self.set1['原始成本']
+        elif self.rClose2.isChecked():
+            cost = self.set1['净会话成本']
+        elif self.rClose3.isChecked():
+            cost = self.set1['净持仓成本']
+
+        prod=self.set1['合约']
+        if prod[0:3]=='HSI':
+            point=50
+        elif prod[0:3]=='MHI':
+            point=10
+
         win = self.box_c1.value()
         profit = abs(hold) * point * win
         self.box_c2.setValue(profit)
-        self.chg_close()
+        self.calc_close()
 
     #box_c2 change
     def boxc2_chg(self):
-        txt = self.get_close_text()
-        if len(txt)<1:
+        if not hasattr(self,'set1'):
+            print('Not Set1')
             return
-        hold = int(txt[0:txt.find('@')])
-        cost = float(txt[txt.find('@') + 1:])
+
+        hold=self.set1['持仓']
         if hold==0:
             return
 
-        point = 50
+        if self.rClose1.isChecked():
+            cost=self.set1['原始成本']
+        elif self.rClose2.isChecked():
+            cost = self.set1['净会话成本']
+        elif self.rClose3.isChecked():
+            cost = self.set1['净持仓成本']
+
+        prod=self.set1['合约']
+        if prod[0:3]=='HSI':
+            point=50
+        elif prod[0:3]=='MHI':
+            point=10
+
         profit = self.box_c2.value()
-        win=profit/point/abs(hold)
+        win=math.ceil(profit/point/abs(hold))
         self.box_c1.setValue(win)
-        self.chg_close()
+        self.calc_close()
 
     #close radio change
     def chg_close(self):
         self.calc_close()
 
-    #get close text
-    def get_close_text(self):
-        if self.rClose1.isChecked():
-            return  self.txt_c1.text()
-        elif self.rClose2.isChecked():
-            return self.txt_c2.text()
-        elif self.rClose3.isChecked():
-            return self.txt_c3.text()
 
     #calc close Price
     def calc_close(self):
-        txt=self.get_close_text()
-        if txt==None or len(txt)<2:
+        if not hasattr(self,'set1'):
+            print('Not Set1')
             return
-        hold = int(txt[0:txt.find('@')])
-        cost = float(txt[txt.find('@') + 1:])
+
+        hold=self.set1['持仓']
         if hold==0:
             return
 
-        point=50
+        prod=self.set1['合约']
+        if prod[0:3]=='HSI':
+            point=50
+            charg=33.54
+        elif prod[0:3]=='MHI':
+            point=10
+            charg=13.6
+
         win = self.box_c1.value()
         profit=self.box_c2.value()
         lock=self.box_c3.value()
+
+
+        if self.rClose1.isChecked():
+            cost=math.ceil(self.set1['原始成本'])
+            preProfit=self.set1['净利润']
+            Charges = self.set1['手续费']
+            Charg1=charg*abs(hold)
+            win=math.ceil(win+charg*2/point)
+        elif self.rClose2.isChecked():
+            cost = self.set1['净会话成本']
+            comHold=self.set1['会话盈利']/self.set1['会话平均盈利']
+            closeHold = self.set1['已平仓']
+            Charges = (closeHold-comHold)*charg*2
+            preProfit = self.set1['利润']-self.set1['会话盈利']*point-Charges
+            Charg1=comHold*charg*2+abs(hold)*charg*2
+            win=math.ceil(Charg1/point/abs(hold)+win)
+        elif self.rClose3.isChecked():
+            cost = self.set1['净持仓成本']
+            Charges = self.set1['手续费']
+            preProfit=-Charges
+            Charg1 = charg * abs(hold)
+            closeHold=self.set1['已平仓']
+            win=math.ceil((Charges+Charg1)/point/abs(hold)+win)
+
         #hold buy
         if hold>0:
             ClosePrice=cost+win
-            hold=-hold+lock
+            lots=-hold+lock if lock<=hold else 0
         #hold sell
         else:
             ClosePrice = cost -win
-            hold=-hold-lock
+            lots=-hold-lock if lock<=-hold else 0
 
-        inf="止盈单:%d@%d" %(hold,ClosePrice)
-        print(inf)
+        curProfit=preProfit+win*abs(hold)*point-Charg1
+        curCharges=Charges+abs(hold)*charg
+
+        inf="止盈单:%d@%d|Pre:%.2f + %.2f|Cur:%.2f + %.2f" \
+            %(lots,ClosePrice,preProfit,Charges,curProfit,curCharges)
         self.grClose.setTitle(inf)
-        return hold,ClosePrice
+        return lots,ClosePrice
 
     #click 止盈
     def cb_close1(self):
         if self.check_login(): return
 
-        prod = 'HSIM8'
+        prod = self.set1['合约']
 
         if self.c_close1.isChecked():
             web_trade.orderdata['ahfs'] = "on"
@@ -503,41 +561,66 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def chg_radio(self):
         self.calc_stop()
 
-    def get_stop_text(self):
-        if self.rStop1.isChecked():
-            return self.txt1.text()
-        elif self.rStop3.isChecked():
-            return self.txt2.text()
-        elif self.rStop3.isChecked():
-            return self.txt3.text()
-
     def calc_stop(self):
-        txt=self.get_stop_text()
-        if txt==None or len(txt)<2:
+        if not hasattr(self,'set1'):
+            print('Not Set1')
             return
-        hold = int(txt[0:txt.find('@')])
-        cost = float(txt[txt.find('@') + 1:])
+        hold=self.set1['持仓']
+        if hold==0:
+            return
+
+        prod=self.set1['合约']
+        if prod[0:3]=='HSI':
+            point=50
+            charg=33.54
+        elif prod[0:3]=='MHI':
+            point=10
+            charg=13.6
+
         stop_point = self.box_diff.value()
         nostop = self.box_nostop.value()
         addon=self.box_add.value()
 
+        if self.rStop1.isChecked():
+            cost=math.ceil(self.set1['原始成本'])
+            preProfit=self.set1['净利润']
+            Charges = self.set1['手续费']
+            Charg1=charg*abs(hold)
+        elif self.rStop2.isChecked():
+            cost = self.set1['净会话成本']
+            comHold=self.set1['会话盈利']/self.set1['会话平均盈利']
+            closeHold = self.set1['已平仓']
+            Charges = (closeHold-comHold)*charg*2
+            preProfit = self.set1['利润']-self.set1['会话盈利']*point-Charges
+            Charg1=comHold*charg*2+abs(hold)*charg*2
+        elif self.rStop3.isChecked():
+            cost = self.set1['净持仓成本']
+            Charges = self.set1['手续费']
+            preProfit=-Charges
+            closeHold=self.set1['已平仓']
+            Charg1=charg*abs(hold)
+
         if hold>0:
             lots=nostop-hold
             StopPrice=cost-stop_point
-            sign='L<'
+            sign='SL<'
         elif hold<0:
             lots=-hold-nostop
             StopPrice=cost+stop_point
-            sign='L>'
+            sign='SL>'
         else:
             lots=0
             StopPrice=0
             sign='L>'
 
-        inf="上损单:%d@%s%f+%d" %(lots,sign,StopPrice,addon)
-        print(inf)
+        curProfit=preProfit-point*abs(hold)*(stop_point+addon)-Charg1
+        curCharges=Charges+Charg1
+
+        inf="止损单:%d@%s%f+%d|Pre:%.2f + %.2f|Cur:%.2f + %.2f" \
+            %(lots,sign,StopPrice,addon,preProfit,Charges,curProfit,curCharges)
+        #inf="上损:%d@%s%f+%d" %(lots,sign,StopPrice,addon)
         self.grStop.setTitle(inf)
-        return  lots,StopPrice
+        return lots,StopPrice
 
 if __name__ == "__main__":
     import sys
