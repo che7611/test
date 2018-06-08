@@ -20,14 +20,14 @@
       <x>10</x>
       <y>260</y>
       <width>1161</width>
-      <height>581</height>
+      <height>571</height>
      </rect>
     </property>
     <property name="cursor">
      <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="t_wait">
      <attribute name="title">
@@ -38,8 +38,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>1051</width>
-        <height>551</height>
+        <width>1131</width>
+        <height>531</height>
        </rect>
       </property>
      </widget>
@@ -53,8 +53,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>1031</width>
-        <height>551</height>
+        <width>1121</width>
+        <height>521</height>
        </rect>
       </property>
      </widget>
@@ -68,8 +68,8 @@
        <rect>
         <x>15</x>
         <y>11</y>
-        <width>1031</width>
-        <height>551</height>
+        <width>1121</width>
+        <height>521</height>
        </rect>
       </property>
      </widget>
@@ -84,7 +84,7 @@
         <x>10</x>
         <y>10</y>
         <width>1131</width>
-        <height>571</height>
+        <height>531</height>
        </rect>
       </property>
      </widget>

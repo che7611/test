@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'win2.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -15,13 +15,13 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.t_his = QtWidgets.QTabWidget(self.centralwidget)
-        self.t_his.setGeometry(QtCore.QRect(10, 260, 1161, 581))
+        self.t_his.setGeometry(QtCore.QRect(10, 260, 1161, 571))
         self.t_his.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.t_his.setObjectName("t_his")
         self.t_wait = QtWidgets.QWidget()
         self.t_wait.setObjectName("t_wait")
         self.table_wait = QtWidgets.QTableWidget(self.t_wait)
-        self.table_wait.setGeometry(QtCore.QRect(10, 10, 1051, 551))
+        self.table_wait.setGeometry(QtCore.QRect(10, 10, 1131, 531))
         self.table_wait.setObjectName("table_wait")
         self.table_wait.setColumnCount(0)
         self.table_wait.setRowCount(0)
@@ -29,7 +29,7 @@ class Ui_MainWindow(object):
         self.t_hold = QtWidgets.QWidget()
         self.t_hold.setObjectName("t_hold")
         self.table_hold = QtWidgets.QTableWidget(self.t_hold)
-        self.table_hold.setGeometry(QtCore.QRect(10, 10, 1031, 551))
+        self.table_hold.setGeometry(QtCore.QRect(10, 10, 1121, 521))
         self.table_hold.setObjectName("table_hold")
         self.table_hold.setColumnCount(0)
         self.table_hold.setRowCount(0)
@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.tab2 = QtWidgets.QWidget()
         self.tab2.setObjectName("tab2")
         self.table_his = QtWidgets.QTableWidget(self.tab2)
-        self.table_his.setGeometry(QtCore.QRect(15, 11, 1031, 551))
+        self.table_his.setGeometry(QtCore.QRect(15, 11, 1121, 521))
         self.table_his.setObjectName("table_his")
         self.table_his.setColumnCount(0)
         self.table_his.setRowCount(0)
@@ -45,7 +45,7 @@ class Ui_MainWindow(object):
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.table_comm = QtWidgets.QTableWidget(self.tab)
-        self.table_comm.setGeometry(QtCore.QRect(10, 10, 1131, 571))
+        self.table_comm.setGeometry(QtCore.QRect(10, 10, 1131, 531))
         self.table_comm.setObjectName("table_comm")
         self.table_comm.setColumnCount(0)
         self.table_comm.setRowCount(0)
@@ -525,7 +525,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.t_his.setCurrentIndex(3)
+        self.t_his.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 

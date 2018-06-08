@@ -148,28 +148,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #Test button
     def c_test(self):
         if self.check_login():return
-        #get orderlist
-        hh = web_trade.get_orderlist()
-        if web_trade.status==999:
-            print("get_orderlist没有返回数据[c_orderlist]")
-            return -1
-        tradelist=web_trade.get_tradelist(hh)
 
-        list1 = tradelist
-        #list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
-        #list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
-        df1 = list1[['trade_qty', 'trade_price', 'trade_time']]
-        df2 = df1.fillna(0)
-        df2.columns = ['bs', 'price', 'time']
-        h = HS()
-        df2 = h.ray(df2)
-
-        set1 = df2.tail(3).head(1)
         #set1=df2.tail(1)
-        hold=set1['持仓'].values[0]
-        h_cost=set1['原始成本'].values[0]
-        h_costA = set1['净会话成本'].values[0]
-        h_costB = set1['净持仓成本'].values[0]
+        set1=self.set1
+        hold=set1['持仓']
+        h_cost=set1['原始成本']
+        h_costA = set1['净会话成本']
+        h_costB = set1['净持仓成本']
         print("参考开仓成本  %d@%f" %(hold,h_cost))
         self.txt1.setText("%d@%f" %(hold,h_cost))
         self.txt2.setText ( "%d@%f" % (hold, h_costA))
@@ -190,15 +175,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         list1 = tradelist
         #list1['buy'] = list1[list1.trade_qty > 0]['trade_qty']
         #list1['sell'] = -list1[list1.trade_qty < 0]['trade_qty']
-        df1 = list1[['trade_qty', 'trade_price', 'trade_time']]
+        df1 = list1[['trade_qty', 'trade_price', 'trade_time','product']]
         df2 = df1.fillna(0)
-        df2.columns = ['bs', 'price', 'time']
+        df2.columns = ['bs', 'price', 'time','product']
         h = HS()
         df2 = h.ray(df2)
 
         cols = ['refno', 'product', 'trade_price', 'trade_qty', 'trade_time', 'price', 'filled_qty', 'r_qty',
                 'initiator', 'order_time', 'status']
         rows = df2.copy()
+
+        self.set1=df2.iloc[-1]
         self.show_table(rows, self.table_comm)
     #load info
     def load_info(self):
