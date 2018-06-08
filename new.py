@@ -641,7 +641,13 @@ if __name__ == "__main__":
     border: 1px solid #5465E7;
     font-size:12px;
     }
+    #grClose::title,#grStop::title{
+    color:red;
+    }
     #txt1,#txt2,#txt3{
+    color:green;
+    }
+    #txt_c1,#txt_c2,#txt_c3{
     color:red;
     }
     QPushButton

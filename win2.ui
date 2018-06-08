@@ -272,8 +272,8 @@
       </property>
       <property name="font">
        <font>
-        <family>Adobe Arabic</family>
-        <pointsize>10</pointsize>
+        <family>新宋体</family>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="title">
@@ -538,15 +538,15 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>104</y>
+        <y>105</y>
         <width>811</width>
         <height>91</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>Adobe Arabic</family>
-        <pointsize>10</pointsize>
+        <family>新宋体</family>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="title">
@@ -717,7 +717,7 @@
         <rect>
          <x>12</x>
          <y>23</y>
-         <width>83</width>
+         <width>101</width>
          <height>16</height>
         </rect>
        </property>
@@ -733,7 +733,7 @@
         <rect>
          <x>11</x>
          <y>43</y>
-         <width>101</width>
+         <width>111</width>
          <height>16</height>
         </rect>
        </property>
@@ -746,7 +746,7 @@
         <rect>
          <x>11</x>
          <y>65</y>
-         <width>89</width>
+         <width>101</width>
          <height>16</height>
         </rect>
        </property>
