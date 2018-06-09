@@ -601,11 +601,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Charg1=charg*abs(hold)
 
         if hold>0:
-            lots=nostop-hold
+            lots=nostop-hold if hold>=nostop else 0
             StopPrice=cost-stop_point
             sign='SL<'
         elif hold<0:
-            lots=-hold-nostop
+            lots=-hold-nostop if -hold>=nostop else 0
             StopPrice=cost+stop_point
             sign='SL>'
         else:
