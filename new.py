@@ -501,7 +501,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             win=math.ceil(win+charg*2/point)
         elif self.rClose2.isChecked():
             cost = self.set1['净会话成本']
-            comHold=self.set1['会话盈利']/self.set1['会话平均盈利']
+            comHold=self.set1['会话盈利']/self.set1['会话平均盈利'] if self.set1['会话平均盈利']!=0 else 0
             closeHold = self.set1['已平仓']
             Charges = (closeHold-comHold)*charg*2
             preProfit = self.set1['利润']-self.set1['会话盈利']*point-Charges
