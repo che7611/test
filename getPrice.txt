@@ -1,0 +1,297 @@
+D:\ProgramData\Anaconda3\python.exe "D:\Program Files\JetBrains\PyCharm Community Edition 2017.3.2\helpers\pydev\pydevconsole.py" 51494 51495
+import sys; print('Python %s on %s' % (sys.version, sys.platform))
+sys.path.extend(['C:\\Users\\CheZhiCheng\\PycharmProjects\\sp_order', 'C:/Users/CheZhiCheng/PycharmProjects/sp_order'])
+Python 3.6.3 |Anaconda, Inc.| (default, Oct 15 2017, 03:27:45) [MSC v.1900 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 6.1.0 -- An enhanced Interactive Python. Type '?' for help.
+PyDev console: using IPython 6.1.0
+Python 3.6.3 |Anaconda, Inc.| (default, Oct 15 2017, 03:27:45) [MSC v.1900 64 bit (AMD64)] on win32
+from spapi.sub_client import SpFunc
+from spapi.sub_client import SpFunc, SubPrice, SubTicker
+@SubPrice('HSIM8')
+def aaa(price):
+    print(price)
+    
+aaa.start()
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0F48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0DC8>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0DC8>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0DC8>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0DC8>
+aaa.stop()
+<spapi.sp_struct.SPApiPrice object at 0x00000000057D0D48>
+@SubPrice('MHIM8')
+def aaa(price):
+    print(price.Last[0])
+    
+    
+aaa.start()
+30976.0
+30975.0
+30975.0
+30975.0
+30978.0
+30978.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30979.0
+30978.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30977.0
+30979.0
+30979.0
+30979.0
+30979.0
+30979.0
+30979.0
+30979.0
+30978.0
+30978.0
+30978.0
+30978.0
+30978.0
+30980.0
+30981.0
+30981.0
+30981.0
+30981.0
+30980.0
+30980.0
+30980.0
+30980.0
+30980.0
+30980.0
+30980.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30981.0
+30981.0
+30981.0
+30982.0
+30980.0
+30980.0
+30980.0
+30980.0
+30980.0
+30980.0
+aaa.stop()
+30980.0
+@SubPrice('HHIM8')
+def aaa(price):
+    print(price.Last[0])
+    
+    
+aaa.start()
+30982.0
+30983.0
+30982.0
+30982.0
+30982.0
+30984.0
+30984.0
+30985.0
+30985.0
+30985.0
+30985.0
+30985.0
+30985.0
+30985.0
+30985.0
+30985.0
+30985.0
+30983.0
+30983.0
+30983.0
+30983.0
+30982.0
+30982.0
+30982.0
+30983.0
+30983.0
+30983.0
+30983.0
+30983.0
+30983.0
+30983.0
+30983.0
+30982.0
+30981.0
+30980.0
+30980.0
+30980.0
+30980.0
+30980.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30981.0
+30981.0
+aaa.unsub()
+30982.0
+30982.0
+30983.0
+30983.0
+30982.0
+30982.0
+30982.0
+Traceback (most recent call last):
+  File "D:\ProgramData\Anaconda3\lib\site-packages\IPython\core\interactiveshell.py", line 2862, in run_code
+    exec(code_obj, self.user_global_ns, self.user_ns)
+  File "<ipython-input-12-1ade9a0c2d19>", line 1, in <module>
+    aaa.unsub()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\spapi\sub_client.py", line 185, in unsub
+    self._spfunc.unsub_price(self._prodcode)
+  File "D:\ProgramData\Anaconda3\lib\site-packages\spapi\sub_client.py", line 62, in unsub_price
+    self._s('subscribe_price', prodcode, 0)
+  File "D:\ProgramData\Anaconda3\lib\site-packages\spapi\sub_client.py", line 26, in _s
+    ret = self._handle_socket.recv_pyobj()
+  File "D:\ProgramData\Anaconda3\lib\site-packages\zmq\sugar\socket.py", line 491, in recv_pyobj
+    msg = self.recv(flags)
+  File "zmq/backend/cython/socket.pyx", line 693, in zmq.backend.cython.socket.Socket.recv (zmq\backend\cython\socket.c:7683)
+  File "zmq/backend/cython/socket.pyx", line 727, in zmq.backend.cython.socket.Socket.recv (zmq\backend\cython\socket.c:7460)
+  File "zmq/backend/cython/socket.pyx", line 150, in zmq.backend.cython.socket._recv_copy (zmq\backend\cython\socket.c:2437)
+  File "zmq/backend/cython/socket.pyx", line 145, in zmq.backend.cython.socket._recv_copy (zmq\backend\cython\socket.c:2344)
+  File "zmq/backend/cython/checkrc.pxd", line 19, in zmq.backend.cython.checkrc._check_rc (zmq\backend\cython\socket.c:9823)
+zmq.error.Again: Resource temporarily unavailable
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30982.0
+30981.0
+30981.0
+aaa.stop()
+30981.0
+aaa.get_price()
+print(aaa.get_price())
+None
+priceapi=SubPrice('HSIM8')
+priceapi.get_price()
+Out[17]: <spapi.sp_struct.SPApiPrice at 0x57d0ec8>
+ppp=priceapi.get_price()
+ppp._fields_
+Out[19]: 
+[('Bid', spapi.sp_struct.c_double_Array_20),
+ ('BidQty', spapi.sp_struct.c_long_Array_20),
+ ('BidTicket', spapi.sp_struct.c_long_Array_20),
+ ('Ask', spapi.sp_struct.c_double_Array_20),
+ ('AskQty', spapi.sp_struct.c_long_Array_20),
+ ('AskTicket', spapi.sp_struct.c_long_Array_20),
+ ('Last', spapi.sp_struct.c_double_Array_20),
+ ('LastQty', spapi.sp_struct.c_long_Array_20),
+ ('LastTime', spapi.sp_struct.c_ulong_Array_20),
+ ('Equil', ctypes.c_double),
+ ('Open', ctypes.c_double),
+ ('High', ctypes.c_double),
+ ('Low', ctypes.c_double),
+ ('Close', ctypes.c_double),
+ ('CloseDate', ctypes.c_ulong),
+ ('TurnoverVol', ctypes.c_double),
+ ('TurnoverAmt', ctypes.c_double),
+ ('OpenInt', ctypes.c_long),
+ ('ProdCode', spapi.sp_struct.c_char_Array_16),
+ ('ProdName', spapi.sp_struct.c_char_Array_40),
+ ('DecInPrice', ctypes.c_byte),
+ ('ExstateNo', ctypes.c_long),
+ ('TradeStateNo', ctypes.c_long),
+ ('Suspend', ctypes.c_bool),
+ ('ExpiryYMD', ctypes.c_long),
+ ('ContractYMD', ctypes.c_long),
+ ('Timestamp', ctypes.c_long)]
+ppp.ask
+Traceback (most recent call last):
+  File "D:\ProgramData\Anaconda3\lib\site-packages\IPython\core\interactiveshell.py", line 2862, in run_code
+    exec(code_obj, self.user_global_ns, self.user_ns)
+  File "<ipython-input-20-e9632a5e4b26>", line 1, in <module>
+    ppp.ask
+AttributeError: 'SPApiPrice' object has no attribute 'ask'
+ppp.Ask
+Out[21]: <spapi.sp_struct.c_double_Array_20 at 0x57d08c8>
+ppp.Ask[0]
+Out[22]: 30980.0
+[i for i in ppp.Ask]
+Out[23]: 
+[30980.0,
+ 30981.0,
+ 30982.0,
+ 30983.0,
+ 30984.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0]
