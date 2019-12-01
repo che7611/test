@@ -4,8 +4,8 @@ import pandas as pd
 
 class HS:
     def __init__(self):
-        self.SXF = {"HSI":33.54, "MHI":13.6}  # 13.6
-        self.hy = {"HSI":50, "MHI":10}   # 10
+        self.SXF = {"HSI":33.54, "MHI":13.6,"MCH":18,"HHI":60}  # 13.6
+        self.hy = {"HSI":50, "MHI":10,"MCH":10,"HHI":50}   # 10
         
     def get_data(self, file_name):
         dd = []

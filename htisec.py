@@ -232,11 +232,11 @@ class htisec_web(object):
             url =self.url["Eorderdetail"] % ref
             html = self.get_url(url)
             dfs = pd.read_html(html, header=1)
-            dfs[3].columns=cols
+            dfs[2].columns=cols
             if to_cache:
-                dfs[3]['refno']=ref
-                self.df_cache=self.df_cache.append(dfs[3])
-            return dfs[3]
+                dfs[2]['refno']=ref
+                self.df_cache=self.df_cache.append(dfs[2])
+            return dfs[2]
 
     def get_tradelist(self,hh):
         #hh=self.get_orderlist()
